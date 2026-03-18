@@ -159,6 +159,7 @@ local M = {}
 ---@field notifications OctoConfigNotifications
 ---@field poll OctoConfigPoll
 ---@field debug OctoConfigDebug
+---@field graphql_query_hook? fun(query: string): string
 
 --- Returns the default octo config values
 ---@return OctoConfig
@@ -252,6 +253,7 @@ function M.get_default_values()
     gh_env = {},
     timeout = 5000,
     default_to_projects_v2 = false,
+    graphql_query_hook = nil,
     suppress_missing_scope = {
       projects_v2 = false,
     },
@@ -737,6 +739,9 @@ function M.validate_config()
     validate_type(config.right_bubble_delimiter, "right_bubble_delimiter", "string")
     validate_type(config.left_bubble_delimiter, "left_bubble_delimiter", "string")
     validate_type(config.github_hostname, "github_hostname", "string")
+    if config.graphql_query_hook ~= nil then
+      validate_type(config.graphql_query_hook, "graphql_query_hook", "function")
+    end
     if validate_type(config.default_remote, "default_remote", "table") then
       ---@diagnostic disable-next-line: no-unknown
       for _, v in ipairs(config.default_remote) do

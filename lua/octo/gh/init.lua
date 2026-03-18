@@ -382,6 +382,10 @@ function M.create_graphql_opts(opts)
   opts.query = nil
 
   f.query = query
+  local conf = require("octo.config").values
+  if conf.graphql_query_hook then
+    f.query = conf.graphql_query_hook(f.query)
+  end
   opts.f = f
 
   -- Join F and fields together
